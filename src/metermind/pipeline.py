@@ -224,9 +224,6 @@ def run_shape_personas(
             con.execute(f"CREATE OR REPLACE TABLE {name} AS SELECT * FROM _t")
             con.unregister("_t")
 
-    (PATHS.artifacts / "persona_summary.json").write_text(
-        summary.to_json(orient="records", indent=2)
-    )
     result = {
         "n_profiles": int(len(shape_matrix)),
         "latent_dim": model.latent_dim,
