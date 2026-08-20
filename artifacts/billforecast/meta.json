@@ -1,0 +1,51 @@
+{
+  "feature_names": [
+    "elapsed_kwh",
+    "elapsed_mean_daily",
+    "elapsed_std_daily",
+    "elapsed_max_daily",
+    "elapsed_min_daily",
+    "elapsed_median_daily",
+    "elapsed_peak_kwh",
+    "elapsed_night_kwh",
+    "elapsed_peak_share",
+    "elapsed_weekend_mean",
+    "elapsed_weekday_mean",
+    "weekend_weekday_ratio",
+    "elapsed_trend_slope",
+    "elapsed_last3_mean",
+    "elapsed_first3_mean",
+    "recent_vs_early_ratio",
+    "days_elapsed",
+    "days_remaining",
+    "hist_mean_daily",
+    "hist_std_daily",
+    "hist_cycle_mean",
+    "elapsed_vs_hist_ratio",
+    "load_factor_mean",
+    "month",
+    "day_of_year",
+    "n_weekend_days_remaining"
+  ],
+  "alpha": 0.19999999999999996,
+  "target_coverage": 0.8,
+  "blend_weight": 0.5,
+  "calibration": {
+    "alpha": 0.19999999999999996,
+    "target_coverage": 0.8,
+    "q_hat": 10.685393530272563,
+    "n_calibration": 10326,
+    "group_q_hat": {
+      "Q3": 12.74253576353152,
+      "Q1_light": 5.012578956596741,
+      "Q4_heavy": 22.62532592378443,
+      "Q2": 8.549830972826783
+    },
+    "group_counts": {
+      "Q3": 2629,
+      "Q1_light": 2376,
+      "Q4_heavy": 2812,
+      "Q2": 2509
+    }
+  }
+}

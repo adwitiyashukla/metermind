@@ -1,0 +1,15 @@
+{
+  "n_profiles": 497373,
+  "latent_dim": 8,
+  "reconstruction_mse": 6.061e-05,
+  "silhouette_scores": {
+    "4": 0.1147,
+    "5": 0.1826,
+    "6": 0.1804,
+    "7": 0.1479,
+    "8": 0.155
+  },
+  "n_personas": 5,
+  "unusual_day_threshold": 0.00027324,
+  "n_unusual_days": 4974
+}

@@ -1,0 +1,49 @@
+{
+  "baseline_peak_kwh": 2.2146,
+  "parallel_trends": {
+    "pre_gap_slope_kwh_per_month": -0.02729,
+    "pre_gap_slope_se": 0.00506,
+    "pre_gap_mean_kwh": -0.00521,
+    "n_buckets": 12,
+    "verdict": "pre trends diverge"
+  },
+  "effects": [
+    {
+      "method": "naive post-period difference",
+      "att_kwh": -0.14808,
+      "ci_low": -0.15573,
+      "ci_high": -0.14042,
+      "std_error": 0.0039,
+      "n_treated": 377262,
+      "n_control": 1477635,
+      "note": "Confounded: cohorts were recruited, not randomised.",
+      "att_pct_of_baseline": -6.69
+    },
+    {
+      "method": "difference in differences",
+      "att_kwh": -0.07135,
+      "ci_low": -0.10905,
+      "ci_high": -0.03364,
+      "std_error": 0.01924,
+      "n_treated": 1112,
+      "n_control": 4400,
+      "note": "Cancels time invariant household differences. Assumes parallel trends.",
+      "att_pct_of_baseline": -3.22
+    },
+    {
+      "method": "IPW difference in differences",
+      "att_kwh": -0.06234,
+      "ci_low": -0.09955,
+      "ci_high": -0.02514,
+      "std_error": 0.01898,
+      "n_treated": 1112,
+      "n_control": 4392,
+      "note": "Propensity from pre period behaviour; 8 household(s) trimmed for overlap.",
+      "att_pct_of_baseline": -2.82
+    }
+  ],
+  "qini_coefficient": 3.877,
+  "n_households_scored": 5512,
+  "top_decile_observed_uplift_kwh": 1.163,
+  "bottom_decile_observed_uplift_kwh": -1.0132
+}

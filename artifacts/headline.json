@@ -1,0 +1,16 @@
+{
+  "n_households": 5561,
+  "n_household_days": 3203781,
+  "bill_mape_pct": 8.0426,
+  "bill_naive_mape_pct": 8.394,
+  "bill_skill_vs_naive_pct": 4.19,
+  "coverage_before_conformal_pct": 51.83,
+  "coverage_after_conformal_pct": 78.35,
+  "n_personas": 5,
+  "att_naive_kwh": -0.14808,
+  "att_did_kwh": -0.07135,
+  "att_did_pct": -3.22,
+  "qini_coefficient": 3.877,
+  "parallel_trends_verdict": "pre trends diverge",
+  "generated_at_utc": "2026-08-20T06:54:07.647206+00:00"
+}

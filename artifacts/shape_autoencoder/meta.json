@@ -1,0 +1,9 @@
+{
+  "latent_dim": 8,
+  "epochs_run": 30,
+  "best_loss": 6.0606878832913935e-05,
+  "n_train": 225000,
+  "intervals_per_day": 48,
+  "normalisation": "profile divided by its own daily total (shape only)",
+  "padding": "circular"
+}

@@ -1,0 +1,21 @@
+{
+  "database": "metermind_app.duckdb",
+  "size_mb": 6.3,
+  "tables": {
+    "dim_household": 5561,
+    "dim_date": 731,
+    "persona_summary": 5,
+    "persona_shapes": 5,
+    "household_persona": 5557,
+    "treatment_effects": 3,
+    "parallel_trends": 48,
+    "qini_curve": 99,
+    "uplift_deciles": 10,
+    "uplift_scores": 5512,
+    "propensity_diagnostics": 5504,
+    "bill_forecasts": 20567,
+    "dq_results": 12,
+    "dq_scorecard": 5
+  },
+  "exported_at_utc": "2026-08-20T07:06:24.114868+00:00"
+}
