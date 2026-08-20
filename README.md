@@ -194,32 +194,6 @@ Parallel trends check on the 2012 pre-period: gap slope -0.02729 kWh per month (
 | 10 | 107 / 445 | -0.4960 | -1.0132 |
 <!-- RESULTS:END -->
 
-## What these numbers do not say
-
-**The causal estimate rests on an assumption the data partially contradicts.**
-The pre-period trends test reports that the two cohorts were already diverging
-before the tariff switched on. Difference in differences is therefore not
-cleanly identified here, which is exactly why the IPW variant is reported
-alongside it, and why the honest reading of the effect is a range of roughly 2.8
-to 3.2 percent rather than a single number.
-
-**Conformal coverage is guaranteed under exchangeability, and a chronological
-split violates it.** Calibration data comes from an earlier window than test
-data, so the guarantee is approximate here. The residual gap between the
-achieved coverage and the 80 percent target is the price of forecasting forward
-in time, and it is visible in the table above rather than hidden by calibrating
-on a random split.
-
-**Load shapes are a continuum, not clean clusters.** The best silhouette score
-found was well below what a genuinely separable structure would produce. The
-personas are a useful summary, not a claim that households fall into five
-natural types.
-
-**Cycles from empty properties are excluded.** A cycle metering under 5 kWh
-across twelve days is a vacancy or a dead meter, not a small household. Left in,
-their near-zero denominators make percentage error meaningless. They are 0.3
-percent of cycles and their exclusion is enforced at the feature-build boundary.
-
 ## Running it
 
 Python 3.11 to 3.13. No API keys, no accounts.
@@ -276,42 +250,6 @@ metermind/
     ci.yml          lint, tests on three Python versions, dashboard render check
     keepalive.yml   six-hourly ping so the live demo never sleeps
 ```
-
-## Automation
-
-| Workflow | When | What it does |
-|---|---|---|
-| `ci.yml` | every push and pull request | ruff, the test suite on Python 3.11, 3.12 and 3.13, and a real render of the dashboard |
-| `keepalive.yml` | every six hours | keeps the Hugging Face Space awake |
-
-The keepalive exists because a free Space is suspended after 48 hours without
-traffic, and the next visitor then waits about a minute on a loading screen. It
-polls the Hub API for `runtime.stage` rather than just requesting the page,
-because a sleeping Space serves a holding page while its container boots and a
-plain HTTP 200 check would pass against that holding page without the app ever
-having started.
-
-## Tests
-
-```
-pytest -q
-```
-
-The ones worth reading first:
-
-| Test | What it pins down |
-|---|---|
-| `test_billforecast.py::test_features_do_not_read_past_the_cutoff` | Corrupts every reading after a wall date and asserts no feature moves |
-| `test_billforecast.py::test_the_corruption_in_the_leakage_test_is_real` | Proves the test above is not vacuous |
-| `test_conformal.py::test_coverage_guarantee_holds_across_many_seeds` | Coverage meets the target across 25 independent draws |
-| `test_conformal.py::test_grouped_calibration_fixes_conditional_coverage` | Mondrian calibration beats a global correction on the worst-served group |
-| `test_conformal.py::test_finite_sample_correction_is_applied` | The quantile level is the corrected one, not the naive one |
-
-The leakage test earned its place. It was written before the feature builder was
-finished, and it immediately caught `hist_mean_daily` averaging over a
-household's entire series including future billing cycles. That bug would have
-inflated every accuracy number in this project and would not have been visible in
-any score.
 
 ## Licence
 
