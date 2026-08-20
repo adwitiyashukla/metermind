@@ -172,8 +172,9 @@ with tabs[0]:
     st.subheader("Calibrated bill-shock forecasting")
     st.caption(
         "Twelve days into a thirty day billing cycle, predict the final bill. "
-        "The interval matters more than the point estimate, because an interval "
-        "that claims 80 percent and delivers 58 percent is worse than no interval."
+        "The interval matters more than the point estimate. An interval that "
+        "claims 80 percent and delivers barely half that is worse than no "
+        "interval at all, because it still gets trusted."
     )
 
     scores = artifact("billforecast_scores.json")
@@ -245,9 +246,17 @@ with tabs[0]:
             ORDER BY shock_headroom_kwh DESC
             LIMIT 200
         """)
-        if not alerts.empty:
+        alert_totals = run_query(
+            "SELECT count(*) FILTER (WHERE is_bill_shock) AS fired, count(*) AS total "
+            "FROM bill_forecasts"
+        )
+        if not alerts.empty and not alert_totals.empty:
+            fired = int(alert_totals.iloc[0]["fired"])
+            total_cycles = int(alert_totals.iloc[0]["total"])
             st.markdown(
-                f"**Bill-shock alerts fired: {len(alerts):,} of the test cycles**"
+                f"**Bill-shock alerts fired on {fired:,} of {total_cycles:,} test cycles "
+                f"({100 * fired / total_cycles:.1f} percent).** "
+                f"The {len(alerts):,} largest are shown below."
             )
             st.caption(
                 "An alert fires when even the optimistic end of the calibrated interval "
