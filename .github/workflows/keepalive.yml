@@ -1,0 +1,82 @@
+name: Keepalive
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: keepalive
+  cancel-in-progress: false
+
+jobs:
+  ping:
+    name: Ping the Hugging Face Space
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      SPACE_ID: adwitiyashukla/metermind
+      HF_TOKEN: ${{ secrets.HF_TOKEN }}
+    steps:
+      - name: Wake the Space and wait until it reports RUNNING
+        run: |
+          set -uo pipefail
+
+          auth=()
+          if [ -n "${HF_TOKEN:-}" ]; then
+            auth=(-H "Authorization: Bearer ${HF_TOKEN}")
+          fi
+
+          api="https://huggingface.co/api/spaces/${SPACE_ID}"
+
+          info=$(curl -sS --max-time 30 "${auth[@]}" "$api")
+          host=$(printf '%s' "$info" | jq -r '
+            if .host then .host
+            elif (.runtime.domains[0].domain // "") != "" then "https://" + .runtime.domains[0].domain
+            else "" end')
+
+          if [ -z "$host" ]; then
+            echo "::error::Could not resolve a URL for ${SPACE_ID}. Check the owner and name."
+            printf '%s\n' "$info" | head -c 500
+            exit 1
+          fi
+          echo "Space URL: ${host}"
+
+          for attempt in $(seq 1 20); do
+            curl -sS -o /dev/null --max-time 30 "$host" || true
+
+            stage=$(curl -sS --max-time 30 "${auth[@]}" "$api" | jq -r '.runtime.stage // "UNKNOWN"')
+            echo "Attempt ${attempt}: stage=${stage}"
+
+            case "$stage" in
+              RUNNING|RUNNING_BUILDING)
+                {
+                  echo "### Space is awake"
+                  echo ""
+                  echo "\`${SPACE_ID}\` reported \`${stage}\` after ${attempt} attempt(s)."
+                  echo ""
+                  echo "${host}"
+                } >> "$GITHUB_STEP_SUMMARY"
+                exit 0
+                ;;
+              PAUSED|BUILD_ERROR|RUNTIME_ERROR|CONFIG_ERROR)
+                echo "::error::${SPACE_ID} is in state ${stage}. Pinging cannot fix this."
+                {
+                  echo "### Space needs attention"
+                  echo ""
+                  echo "State: \`${stage}\`"
+                  echo ""
+                  echo "Check the logs at https://huggingface.co/spaces/${SPACE_ID}"
+                } >> "$GITHUB_STEP_SUMMARY"
+                exit 1
+                ;;
+            esac
+
+            sleep 20
+          done
+
+          echo "::error::${SPACE_ID} did not reach RUNNING within about seven minutes."
+          exit 1

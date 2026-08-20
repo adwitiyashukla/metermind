@@ -272,7 +272,24 @@ metermind/
   app.py            Streamlit dashboard
   scripts/          raw extraction, README results generator
   tests/            no network, no data files required
+  .github/workflows/
+    ci.yml          lint, tests on three Python versions, dashboard render check
+    keepalive.yml   six-hourly ping so the live demo never sleeps
 ```
+
+## Automation
+
+| Workflow | When | What it does |
+|---|---|---|
+| `ci.yml` | every push and pull request | ruff, the test suite on Python 3.11, 3.12 and 3.13, and a real render of the dashboard |
+| `keepalive.yml` | every six hours | keeps the Hugging Face Space awake |
+
+The keepalive exists because a free Space is suspended after 48 hours without
+traffic, and the next visitor then waits about a minute on a loading screen. It
+polls the Hub API for `runtime.stage` rather than just requesting the page,
+because a sleeping Space serves a holding page while its container boots and a
+plain HTTP 200 check would pass against that holding page without the app ever
+having started.
 
 ## Tests
 
